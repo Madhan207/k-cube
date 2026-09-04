@@ -1,0 +1,29 @@
+# Environment files
+.env
+*.env
+!.env.example
+
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+.venv/
+venv/
+ENV/
+backend/logs/*.log
+backend/media/*
+!backend/media/.gitkeep
+backend/staticfiles/
+
+# Node / React
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
