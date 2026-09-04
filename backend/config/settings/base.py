@@ -85,14 +85,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
-DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://kcube_user:kcube_secure_pass@localhost:5432/kcube_loans')
-}
-
-if DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
-    DATABASES['default']['OPTIONS'] = {
-        'timeout': 30,
+DATABASE_URL = env('DATABASE_URL', default=None)
+if DATABASE_URL:
+    DATABASES = {'default': env.db('DATABASE_URL')}
+    if 'postgresql' in DATABASES['default']['ENGINE']:
+        DATABASES['default']['CONN_MAX_AGE'] = env.int('CONN_MAX_AGE', default=60)
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+            'OPTIONS': {'timeout': 30},
+        }
     }
+
 
 # Custom user model
 AUTH_USER_MODEL = 'accounts.User'
