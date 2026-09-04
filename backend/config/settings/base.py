@@ -245,6 +245,31 @@ ALLOWED_DOCUMENT_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/j
 ALLOWED_DOCUMENT_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png']
 
 # Logging
+LOG_DIR = BASE_DIR / 'logs'
+try:
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+except Exception:
+    pass
+
+LOGGING_HANDLERS = {
+    'console': {'class': 'logging.StreamHandler', 'formatter': 'verbose'},
+}
+
+if LOG_DIR.exists():
+    try:
+        log_file = LOG_DIR / 'kcube.log'
+        with open(log_file, 'a'):
+            pass
+        LOGGING_HANDLERS['file'] = {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': log_file,
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'formatter': 'verbose',
+        }
+    except Exception:
+        pass
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -254,18 +279,10 @@ LOGGING = {
             'style': '{',
         },
     },
-    'handlers': {
-        'console': {'class': 'logging.StreamHandler', 'formatter': 'verbose'},
-        'file': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'kcube.log',
-            'maxBytes': 10485760,
-            'backupCount': 5,
-            'formatter': 'verbose',
-        },
-    },
+    'handlers': LOGGING_HANDLERS,
     'loggers': {
         'django': {'handlers': ['console'], 'level': 'INFO'},
-        'kcube': {'handlers': ['console', 'file'], 'level': 'DEBUG', 'propagate': False},
+        'kcube': {'handlers': list(LOGGING_HANDLERS.keys()), 'level': 'DEBUG', 'propagate': False},
     },
 }
+
