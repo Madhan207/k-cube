@@ -1,3 +1,4 @@
+from decimal import Decimal
 from rest_framework import serializers
 from .models import PaymentSchedule, Payment
 
@@ -35,7 +36,7 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
 
 class RecordPaymentSerializer(serializers.Serializer):
     schedule = serializers.PrimaryKeyRelatedField(queryset=PaymentSchedule.objects.all())
-    amount_paid = serializers.DecimalField(max_digits=12, decimal_places=2, min_value=0.01)
+    amount_paid = serializers.DecimalField(max_digits=12, decimal_places=2, min_value=Decimal('0.01'))
     payment_date = serializers.DateField()
     payment_method = serializers.ChoiceField(choices=Payment.PaymentMethod.choices)
     transaction_reference = serializers.CharField(required=False, allow_blank=True, max_length=200)
