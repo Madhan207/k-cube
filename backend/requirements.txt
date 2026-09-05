@@ -18,6 +18,7 @@ whitenoise>=6.6
 celery>=5.3
 redis>=5.0
 django-redis>=5.4
+requests>=2.31.0
 pytest-django>=4.7
 factory-boy>=3.3
 coverage>=7.4
